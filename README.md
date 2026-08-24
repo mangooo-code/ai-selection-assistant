@@ -1,30 +1,88 @@
-# AI 划词助手（MVP）
+# ✨ AI 划词助手
 
-Chrome Manifest V3 扩展：在普通网页中选中文字，点击 `✨ AI` 后进行解释、搜索与连续追问。
+> **让 AI 出现在阅读发生的地方。**
 
-## 运行
+AI 划词助手是一款轻量级 Chrome AI 阅读插件。
 
-```powershell
+浏览网页时，无需再「复制 → 切换 AI / 搜索引擎 → 粘贴 → 提问」，只需选中文字，即可直接完成 **AI 解释、总结、翻译、联网搜索和连续追问**。
+
+## 🚀 核心功能
+
+- ✨ **AI 解释**：划词即可解释陌生概念和内容
+- 📝 **AI 总结**：快速提炼长文本核心信息
+- 🌐 **AI 翻译**：将外语内容快速翻译为中文
+- 🔍 **联网搜索**：根据问题按需联网，并展示信息来源
+- 💬 **连续追问**：基于当前内容继续提问，保留上下文
+- ⚡ **流式输出**：AI 内容实时生成，无需等待完整回答
+- 🪟 **悬浮卡片**：结果固定在当前网页，支持拖动和持续阅读
+- 🤖 **模型配置**：支持用户配置自己的 API Key 和模型
+
+## 🛠️ 本地运行
+
+### 1. 安装依赖
+
+```bash
 npm install
+```
+
+Windows PowerShell 如遇执行策略限制：
+
+```bash
+npm.cmd install
+```
+
+### 2. Build
+
+```bash
 npm run build
 ```
 
-若 PowerShell 的执行策略阻止 npm 脚本，可在项目目录中使用：
+或：
 
-```powershell
-node_modules\.bin\tsc.cmd --noEmit
-node scripts\build.mjs
+```bash
+npm.cmd run build
 ```
 
-在 Chrome 打开 `chrome://extensions`，启用“开发者模式”，选择“加载已解压的扩展程序”，并选择本项目的 `dist` 目录。
+成功后会生成 `dist` 文件夹。
 
-点击浏览器工具栏中的扩展图标，选择“千问（Qwen）”、填写 API Key 与模型（默认 `qwen-plus`），然后保存。API Key 仅保存在 `chrome.storage.local`，不会进入本仓库。
+### 3. 安装插件
 
-## 当前范围
+在 Chrome 打开：
 
-- 已实现：划词、浮动 Trigger、AI 解释、总结、翻译、错误/加载状态、可拖动且持久的结果卡、继续追问、Popup 配置。
-- 联网解释：开启“允许联网搜索”后，千问会按需联网搜索；若 API 返回搜索来源，结果卡将显示可点击来源。
+`chrome://extensions`
 
-## 安全说明
+然后：
 
-Content Script 无法访问 API Key；只有扩展 Background Service Worker 会读取浏览器本地扩展存储并请求模型 API。
+1. 开启「开发者模式」
+2. 点击「加载已解压的扩展程序」
+3. 选择项目中的 `dist` 文件夹
+4. 刷新网页即可使用
+
+### 4. 配置 AI
+
+点击浏览器工具栏中的插件图标，在 Popup 中配置：
+
+- AI Provider
+- API Key
+- Model
+- 联网搜索
+
+保存后即可使用。
+
+> ⚠️ 请使用自己的 API Key。API Key 仅保存在浏览器扩展本地存储中，不会提交至本仓库。
+
+## 🛡️ 异常处理
+
+针对真实使用场景提供 API Key 无效、额度不足、模型不可用、断网、请求超时等异常兜底，并在请求失败时保留用户输入和已有对话。
+
+## ⚡ 性能优化
+
+针对早期版本首 Token 响应约 **12s** 的问题，通过性能埋点定位 Qwen Thinking 耗时，并结合关闭非必要 Thinking + Streaming 优化：
+
+**首 Token：约 12s → 0.7–1.0s**
+
+简单任务完整回答约 **3s**。
+
+## 📌 Status
+
+当前为持续迭代中的 MVP。
